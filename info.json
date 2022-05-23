@@ -1,0 +1,9 @@
+{
+  "name": "seamless-loader",
+  "version": "0.0.1",
+  "title": "SeamlessLoader",
+  "author": "Bleb1k",
+  "factorio_version": "1.1",
+  "dependencies": ["base >= 1.1"],
+  "description": "Pipe items through near-placed buildings and belts! \n<VIP>"
+}
