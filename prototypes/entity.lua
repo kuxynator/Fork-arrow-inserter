@@ -5,7 +5,7 @@ local empty_sheet = {
 	height = 1,
 }
 
-function create_entity(prefix, tint)
+function create_inserter(prefix, tint)
 	local name = prefix + "arrow"
 
 	local eBase = table.deepcopy(data.raw["inserter"][prefix + "inserter"])
@@ -36,23 +36,22 @@ function create_entity(prefix, tint)
 	eBase.chases_belt_items = false
 	eBase.draw_held_item = false
 	eBase.hand_size = 0.66
-	eBase.hand_base_picture = table.deepcopy(empty_sheet)
-	eBase.hand_base_picture.hr_version = table.deepcopy(empty_sheet)
-	eBase.hand_base_shadow = table.deepcopy(empty_sheet)
-	eBase.hand_base_shadow.hr_version = table.deepcopy(empty_sheet)
-	eBase.hand_closed_picture = table.deepcopy(empty_sheet)
-	eBase.hand_closed_picture.hr_version = table.deepcopy(empty_sheet)
-	eBase.hand_closed_shadow = table.deepcopy(empty_sheet)
-	eBase.hand_closed_shadow.hr_version = table.deepcopy(empty_sheet)
-	eBase.hand_open_picture = table.deepcopy(empty_sheet)
-	eBase.hand_open_picture.hr_version = table.deepcopy(empty_sheet)
-	eBase.hand_open_shadow = table.deepcopy(empty_sheet)
-	eBase.hand_open_shadow.hr_version = table.deepcopy(empty_sheet)
-	eBase.platform_picture.sheet = table.deepcopy(empty_sheet)
-	eBase.platform_picture.sheet.hr_version = table.deepcopy(empty_sheet)
+	eBase.hand_base_picture = empty_sheet
+	eBase.hand_base_shadow = empty_sheet
+	eBase.hand_closed_picture = empty_sheet
+	eBase.hand_closed_shadow = empty_sheet
+	eBase.hand_open_picture = empty_sheet
+	eBase.hand_open_shadow = empty_sheet
+	eBase.platform_picture.sheet = empty_sheet
 	eBase.platform_picture.sheet.filename = "__seamless-loader__/arrow.png"
 	eBase.platform_picture.sheet.hr_version.filename = "__seamless-loader__/arrow.png"
+	eBase.platform_picture.sheet.size = 64
+	eBase.platform_picture.sheet.hr_version.size = 64
 
 
 	data:extend { eBase }
+end
+
+function create_constant_combinator()
+	table.deepcopy("constant-combinator")
 end
