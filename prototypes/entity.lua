@@ -11,6 +11,12 @@ local empty_sheet = {
 	}
 }
 
+local energy = {
+	[""] = { passive = "150W", active = "4.5kJ" },
+	["fast-"] = { passive = "200W", active = "6kJ" },
+	["stack-"] = { passive = "400W", active = "18kJ" },
+}
+
 local function create_entity(prefix, tint, num)
 	local name = prefix .. "arrow"
 
@@ -23,13 +29,8 @@ local function create_entity(prefix, tint, num)
 		icon_size = 64,
 		tint = tint
 	} }
-	-- eBase.icons = {
-	-- 	icon = "__arrow-inserter__/arrow.png",
-	-- 	tint = tint,
-	-- 	-- position = { x = 65, y = 0 }
-	-- }
 	eBase.selection_priority = 255
-	-- eBase.extension_speed = eBase.extension_speed * 4 / 5
+	-- eBase.energy_per_rotation
 	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
 	eBase.allow_custom_vectors = true
 	eBase.pickup_position = { 0, -0.3 }

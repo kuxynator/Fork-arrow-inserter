@@ -11,6 +11,21 @@ local empty_sheet = {
 	}
 }
 
+local recipes = {
+	[0] = {
+		{ "inserter", 1 },
+		{ "electronic-circuit", 1 }
+	},
+	[1] = {
+		{ "fast-inserter", 1 },
+		{ "steel-plate", 1 }
+	},
+	[2] = {
+		{ "stack-inserter", 1 },
+		{ "advanced-circuit", 1 }
+	}
+}
+
 local function create_recipe(prefix, tint, num)
 	local name = prefix .. "arrow"
 
@@ -18,8 +33,11 @@ local function create_recipe(prefix, tint, num)
 
 	rBase.name = name
 	rBase.result = name
+	rBase.result_count = 2
 	rBase.order = "z[arrow]-" .. num
 	rBase.enabled = true
+	local r = recipes[num] or rBase.ingredients
+	rBase.ingredients = r
 	rBase.icons = { {
 		icon = "__arrow-inserter__/arrow.png",
 		icon_size = 64,
