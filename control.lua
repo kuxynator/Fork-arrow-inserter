@@ -37,7 +37,8 @@ end
 function destroy_entity(evt)
 	local entity = get_entity[evt.name](evt)
 	if string.find(entity.name, "arrow") then
-		entity.surface.find_entity(entity.name .. "_arr", entity.position).destroy()
+		local a = entity.surface.find_entity(entity.name .. "_arr", entity.position)
+		if a then a.destroy() end
 		game.players[1].print("hoi")
 	end
 end
