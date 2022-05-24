@@ -48,10 +48,10 @@ local function create_entity(prefix, tint)
 	eBase.platform_picture.sheet.hr_version.size = 64
 	eBase.platform_picture.sheet.shift = { 0, 0 }
 	eBase.platform_picture.sheet.hr_version.shift = { 0, 0 }
-	eBase.platform_picture.sheet.filename = "__seamless-loader__/arrow.png"
+	eBase.platform_picture.sheet.filename = "__arrow-inserter__/arrow.png"
 	eBase.platform_picture.sheet.hr_version.tint = tint
 	-- eBase.platform_picture.sheet.hr_version.tint.a = 0.95
-	eBase.platform_picture.sheet.hr_version.filename = "__seamless-loader__/arrow.png"
+	eBase.platform_picture.sheet.hr_version.filename = "__arrow-inserter__/arrow.png"
 
 	create_constant_combinator(eBase, tint)
 	data:extend { eBase }
@@ -69,14 +69,14 @@ function create_constant_combinator(parent, tint)
 	entity.tile_height = 0
 	entity.tile_width = 1
 	entity.sprites = { sheet = {
-		filename = "__seamless-loader__/arrow.png",
+		filename = "__arrow-inserter__/arrow.png",
 		size = { 1, 1 },
 		position = { 0, 0 },
 		tint = tint,
 		scale = 0.5,
 	} }
 	entity.integration_patch = { sheet = {
-		filename = "__seamless-loader__/arrow.png",
+		filename = "__arrow-inserter__/arrow.png",
 		size = 64,
 		position = { 0, 0 },
 		tint = tint,
