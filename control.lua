@@ -28,6 +28,9 @@ function build_entity(evt)
 	if string.match(entity.name, "arrow") then
 		create_arrow(entity.name, entity, direction)
 		entity.inserter_stack_size_override = 1
+		if string.match(entity.name, "stack") then
+			entity.inserter_stack_size_override = 3
+		end
 	end
 end
 
@@ -51,15 +54,21 @@ script.on_event(defines.events.script_raised_destroy, destroy_entity)
 
 script.on_event(defines.events.on_selected_entity_changed, function(evt)
 	local entity = evt.last_entity
-	if entity and entity.name == "arrow" then
+	if entity and string.match(entity.name, "arrow") then
 		entity.inserter_stack_size_override = 1
+		if string.match(entity.name, "stack") then
+			entity.inserter_stack_size_override = 3
+		end
 	end
 end)
 
 script.on_event(defines.events.on_gui_closed, function(evt)
 	local entity = evt.entity
-	if entity and entity.name == "arrow" then
+	if entity and string.match(entity.name, "arrow") then
 		entity.inserter_stack_size_override = 1
+		if string.match(entity.name, "stack") then
+			entity.inserter_stack_size_override = 3
+		end
 	end
 end)
 
