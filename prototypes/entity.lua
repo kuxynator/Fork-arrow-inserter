@@ -11,14 +11,23 @@ local empty_sheet = {
 	}
 }
 
-local function create_entity(prefix, tint)
+local function create_entity(prefix, tint, num)
 	local name = prefix .. "arrow"
 
 	local eBase = table.deepcopy(data.raw["inserter"][prefix .. "inserter"])
 	eBase.name = name
 	eBase.minable.result = name
-	eBase.icon = "__core__/graphics/empty.png"
-	eBase.icon_size = 1
+	eBase.order = "z[arrow]-" .. num
+	eBase.icons = { {
+		icon = "__arrow-inserter__/arrow.png",
+		icon_size = 64,
+		tint = tint
+	} }
+	-- eBase.icons = {
+	-- 	icon = "__arrow-inserter__/arrow.png",
+	-- 	tint = tint,
+	-- 	-- position = { x = 65, y = 0 }
+	-- }
 	eBase.selection_priority = 255
 	-- eBase.extension_speed = eBase.extension_speed * 4 / 5
 	eBase.rotation_speed = eBase.rotation_speed * 4 / 5

@@ -11,14 +11,20 @@ local empty_sheet = {
 	}
 }
 
-local function create_recipe(prefix)
+local function create_recipe(prefix, tint, num)
 	local name = prefix .. "arrow"
 
 	local rBase = table.deepcopy(data.raw.recipe[prefix .. "inserter"])
 
 	rBase.name = name
 	rBase.result = name
+	rBase.order = "z[arrow]-" .. num
 	rBase.enabled = true
+	rBase.icons = { {
+		icon = "__arrow-inserter__/arrow.png",
+		icon_size = 64,
+		tint = tint
+	} }
 
 	data:extend { rBase }
 end

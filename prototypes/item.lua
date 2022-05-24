@@ -11,14 +11,18 @@ local empty_sheet = {
 	}
 }
 
-function create_item(prefix)
+function create_item(prefix, tint, num)
 	local name = prefix .. "arrow"
 
 	local iBase = table.deepcopy(data.raw.item[prefix .. "inserter"])
 	iBase.name = name
 	iBase.place_result = name
-	iBase.icon = "__core__/graphics/empty.png"
-	iBase.icon_size = 1
+	iBase.order = "z[arrow]-" .. num
+	iBase.icons = { {
+		icon = "__arrow-inserter__/arrow.png",
+		icon_size = 64,
+		tint = tint
+	} }
 	data:extend { iBase }
 end
 
