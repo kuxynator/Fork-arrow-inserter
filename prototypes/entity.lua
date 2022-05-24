@@ -3,22 +3,24 @@ local empty_sheet = {
 	priority = "very-low",
 	width = 1,
 	height = 1,
+	hr_version = {
+		filename = "__core__/graphics/empty.png",
+		priority = "very-low",
+		width = 1,
+		height = 1,
+	}
 }
 
-function create_inserter(prefix, tint)
-	local name = prefix + "arrow"
+local function create_entity(prefix, tint)
+	local name = prefix .. "arrow"
 
-	local eBase = table.deepcopy(data.raw["inserter"][prefix + "inserter"])
-
-	eBase.name = "arrow"
-	eBase.minable.result = "arrow"
-
+	local eBase = table.deepcopy(data.raw["inserter"][prefix .. "inserter"])
 	eBase.name = name
-	eBase.place_result = name
+	eBase.minable.result = name
 	eBase.icon = "__core__/graphics/empty.png"
 	eBase.icon_size = 1
 	eBase.selection_priority = 255
-	eBase.extension_speed = 0
+	-- eBase.extension_speed = eBase.extension_speed * 4 / 5
 	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
 	eBase.allow_custom_vectors = true
 	eBase.pickup_position = { 0, -0.3 }
@@ -34,24 +36,55 @@ function create_inserter(prefix, tint)
 	eBase.tile_width = 1
 	eBase.draw_inserter_arrow = false
 	eBase.chases_belt_items = false
-	eBase.draw_held_item = false
-	eBase.hand_size = 0.66
+	-- eBase.draw_held_item = false
+	eBase.hand_size = 0.05
 	eBase.hand_base_picture = empty_sheet
 	eBase.hand_base_shadow = empty_sheet
 	eBase.hand_closed_picture = empty_sheet
 	eBase.hand_closed_shadow = empty_sheet
 	eBase.hand_open_picture = empty_sheet
 	eBase.hand_open_shadow = empty_sheet
-	eBase.platform_picture.sheet = empty_sheet
-	eBase.platform_picture.sheet.filename = "__seamless-loader__/arrow.png"
-	eBase.platform_picture.sheet.hr_version.filename = "__seamless-loader__/arrow.png"
 	eBase.platform_picture.sheet.size = 64
 	eBase.platform_picture.sheet.hr_version.size = 64
+	eBase.platform_picture.sheet.shift = { 0, 0 }
+	eBase.platform_picture.sheet.hr_version.shift = { 0, 0 }
+	eBase.platform_picture.sheet.filename = "__seamless-loader__/arrow.png"
+	eBase.platform_picture.sheet.hr_version.tint = tint
+	-- eBase.platform_picture.sheet.hr_version.tint.a = 0.95
+	eBase.platform_picture.sheet.hr_version.filename = "__seamless-loader__/arrow.png"
 
-
+	create_constant_combinator(eBase, tint)
 	data:extend { eBase }
 end
 
-function create_constant_combinator()
-	table.deepcopy("constant-combinator")
+function create_constant_combinator(parent, tint)
+	local entity = table.deepcopy(data.raw["constant-combinator"]["constant-combinator"])
+	entity.name = parent.name .. "_arr"
+	entity.collision_mask = {}
+	entity.item_slot_count = 0
+	entity.circuit_wire_max_distance = 0
+	entity.integration_patch_render_layer = "higher-object-above"
+	entity.collision_box = { { 0, 0 }, { 0, 0 } }
+	entity.selection_box = { { 0, 0 }, { 0, 0 } }
+	entity.tile_height = 0
+	entity.tile_width = 1
+	entity.sprites = { sheet = {
+		filename = "__seamless-loader__/arrow.png",
+		size = { 1, 1 },
+		position = { 0, 0 },
+		tint = tint,
+		scale = 0.5,
+	} }
+	entity.integration_patch = { sheet = {
+		filename = "__seamless-loader__/arrow.png",
+		size = 64,
+		position = { 0, 0 },
+		tint = tint,
+		scale = 0.5,
+	} }
+	data:extend { entity }
 end
+
+return {
+	create_entity = create_entity,
+}
