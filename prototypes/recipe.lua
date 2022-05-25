@@ -11,33 +11,22 @@ local empty_sheet = {
 	}
 }
 
-local recipes = {
-	[0] = {
-		{ "inserter", 1 },
-		{ "electronic-circuit", 1 }
-	},
-	[1] = {
-		{ "fast-inserter", 1 },
-		{ "steel-plate", 1 }
-	},
-	[2] = {
-		{ "stack-inserter", 1 },
-		{ "advanced-circuit", 1 }
-	}
-}
+local function create_recipe(info)
+	local base_name = info.base_name or nil
+	local prefix = info.prefix
+	local tint = info.tint
+	local recipe = info.recipe
 
-local function create_recipe(prefix, tint, num)
 	local name = prefix .. "arrow"
 
-	local rBase = table.deepcopy(data.raw.recipe[prefix .. "inserter"])
+	local rBase = table.deepcopy(data.raw.recipe[base_name]) or table.deepcopy(data.raw.recipe[prefix .. "inserter"])
 
 	rBase.name = name
 	rBase.result = name
-	rBase.result_count = 2
-	rBase.order = "z[arrow]-" .. num
+	rBase.order = "z[arrow]-[" .. name .. "]"
 	rBase.enabled = true
-	local r = recipes[num] or rBase.ingredients
-	rBase.ingredients = r
+	rBase.ingredients = recipe[1] or rBase.ingredients
+	rBase.result_count = recipe[2] or rBase.result_count
 	rBase.icons = { {
 		icon = "__arrow-inserter__/arrow.png",
 		icon_size = 64,

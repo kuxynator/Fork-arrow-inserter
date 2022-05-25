@@ -11,30 +11,38 @@ local empty_sheet = {
 	}
 }
 
-local energy = {
-	[""] = { passive = "150W", active = "4.5kJ" },
-	["fast-"] = { passive = "200W", active = "6kJ" },
-	["stack-"] = { passive = "400W", active = "18kJ" },
-}
+local function create_entity(info)
+	local base_name = info.base_name or nil
+	local prefix = info.prefix
+	local tint = info.tint
+	local energy = info.energy
+	local tags = info.tags
 
-local function create_entity(prefix, tint, num)
 	local name = prefix .. "arrow"
 
-	local eBase = table.deepcopy(data.raw["inserter"][prefix .. "inserter"])
+	local eBase = table.deepcopy(data.raw["inserter"][base_name]) or table.deepcopy(data.raw["inserter"][prefix .. "inserter"])
+	tags = tags or {
+		long = false
+	}
+
 	eBase.name = name
 	eBase.minable.result = name
-	eBase.order = "z[arrow]-" .. num
+	eBase.order = "z[arrow]-[" .. name .. "]"
 	eBase.icons = { {
 		icon = "__arrow-inserter__/arrow.png",
 		icon_size = 64,
 		tint = tint
 	} }
 	eBase.selection_priority = 255
-	-- eBase.energy_per_rotation
+	eBase.energy_per_rotation = energy.active or eBase.energy_per_rotation
+	eBase.energy_source.drain = energy.passive or eBase.energy_source.drain
 	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
 	eBase.allow_custom_vectors = true
-	eBase.pickup_position = { 0, -0.3 }
-	eBase.insert_position = { 0, 0.45 }
+	eBase.pickup_position = { 0, -0.5 }
+	eBase.insert_position = { 0, 0.35 }
+	if tags.long then
+		eBase.insert_position = { 0, 0.65 }
+	end
 	eBase.collision_box = { { -0.25, -0.01 }, { 0.25, 0.01 } }
 	eBase.selection_box = { { -0.4, -0.2 }, { 0.4, 0.2 } }
 	eBase.collision_mask = { "player-layer", }
@@ -44,7 +52,7 @@ local function create_entity(prefix, tint, num)
 	eBase.protected_from_tile_building = false
 	eBase.tile_height = 0
 	eBase.tile_width = 1
-	eBase.draw_inserter_arrow = false
+	-- eBase.draw_inserter_arrow = false
 	eBase.chases_belt_items = false
 	-- eBase.draw_held_item = false
 	eBase.hand_size = 0.05

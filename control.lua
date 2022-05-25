@@ -65,6 +65,19 @@ end)
 script.on_event(defines.events.on_gui_closed, function(evt)
 	local entity = evt.entity
 	if entity and string.match(entity.name, "arrow") then
+		game.players[1].print(serpent.block { entity.drop_position.x - entity.pickup_position.x, entity.drop_position.y - entity.pickup_position.y })
+
+		if game.active_mods["bobinserters"] then
+			local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
+			local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
+			if ((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 1.1484375)
+					or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 1.1484375)
+			then
+				entity.active = false
+				game.players[1].print("Arrow deactivated!\nDon't change position parameters please :)")
+			end
+		end
+
 		entity.inserter_stack_size_override = 1
 		if string.match(entity.name, "stack") then
 			entity.inserter_stack_size_override = 3
@@ -76,6 +89,7 @@ script.on_event(defines.events.on_player_rotated_entity, function(evt)
 	local entity = evt.entity
 	if string.find(entity.name, "arrow") then
 		entity.surface.find_entity(entity.name .. "_arr", entity.position).direction = (entity.direction + 4) % 8
-		game.players[1].print("hoi")
 	end
 end)
+
+-- game.players[1].print("hoi")

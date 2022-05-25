@@ -11,13 +11,17 @@ local empty_sheet = {
 	}
 }
 
-function create_item(prefix, tint, num)
+function create_item(info)
+	local base_name = info.base_name or nil
+	local prefix = info.prefix
+	local tint = info.tint
+
 	local name = prefix .. "arrow"
 
-	local iBase = table.deepcopy(data.raw.item[prefix .. "inserter"])
+	local iBase = table.deepcopy(data.raw.item[base_name]) or table.deepcopy(data.raw.item[prefix .. "inserter"])
 	iBase.name = name
 	iBase.place_result = name
-	iBase.order = "z[arrow]-" .. num
+	iBase.order = "z[arrow]-[" .. name .. "]"
 	iBase.icons = { {
 		icon = "__arrow-inserter__/arrow.png",
 		icon_size = 64,
