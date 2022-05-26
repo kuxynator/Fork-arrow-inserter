@@ -37,7 +37,7 @@ local function create_entity(info)
 	eBase.energy_per_rotation = energy.active or eBase.energy_per_rotation
 	eBase.energy_source.drain = energy.passive or eBase.energy_source.drain
 	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
-	eBase.allow_custom_vectors = true
+	eBase.allow_custom_vectors = false
 	eBase.pickup_position = { 0, -0.5 }
 	eBase.insert_position = { 0, 0.35 }
 	if tags.long then
@@ -52,7 +52,7 @@ local function create_entity(info)
 	eBase.protected_from_tile_building = false
 	eBase.tile_height = 0
 	eBase.tile_width = 1
-	-- eBase.draw_inserter_arrow = false
+	eBase.draw_inserter_arrow = false
 	eBase.chases_belt_items = false
 	-- eBase.draw_held_item = false
 	eBase.hand_size = 0.05
