@@ -41,7 +41,8 @@ local function create_entity(info)
 	eBase.pickup_position = { 0, -0.5 }
 	eBase.insert_position = { 0, 0.35 }
 	if tags.long then
-		eBase.insert_position = { 0, 0.65 }
+		eBase.pickup_position = { 0, -1.5 }
+		eBase.insert_position = { 0, 1.35 }
 	end
 	eBase.collision_box = { { -0.25, -0.01 }, { 0.25, 0.01 } }
 	eBase.selection_box = { { -0.4, -0.2 }, { 0.4, 0.2 } }
@@ -52,7 +53,7 @@ local function create_entity(info)
 	eBase.protected_from_tile_building = false
 	eBase.tile_height = 0
 	eBase.tile_width = 1
-	eBase.draw_inserter_arrow = false
+	-- eBase.draw_inserter_arrow = false
 	eBase.chases_belt_items = false
 	-- eBase.draw_held_item = false
 	eBase.hand_size = 0.05

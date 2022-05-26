@@ -44,25 +44,27 @@ end
 
 function fix_positions(entity)
 	local look = (entity.orientation * 4)
-	local offset = 0.34765625
-	if entity.prototype.inserter_drop_position[2] == 0.65 then
-		offset = 0.6484375
+	local pOffset = 0.34765625
+	local dOffset = 0.5
+	if entity.prototype.inserter_drop_position[2] == 1.35 then
+		pOffset = 1.34765625
+		dOffset = 1.5
 	end
 	if look == 0 then
-		entity.drop_position = { entity.position.x, entity.position.y + offset }
-		entity.pickup_position = { entity.position.x, entity.position.y - 0.5 }
+		entity.drop_position = { entity.position.x, entity.position.y + pOffset }
+		entity.pickup_position = { entity.position.x, entity.position.y - dOffset }
 	end
 	if look == 1 then
-		entity.drop_position = { entity.position.x - offset, entity.position.y }
-		entity.pickup_position = { entity.position.x + 0.5, entity.position.y }
+		entity.drop_position = { entity.position.x - pOffset, entity.position.y }
+		entity.pickup_position = { entity.position.x + dOffset, entity.position.y }
 	end
 	if look == 2 then
-		entity.drop_position = { entity.position.x, entity.position.y - offset }
-		entity.pickup_position = { entity.position.x, entity.position.y + 0.5 }
+		entity.drop_position = { entity.position.x, entity.position.y - pOffset }
+		entity.pickup_position = { entity.position.x, entity.position.y + dOffset }
 	end
 	if look == 3 then
-		entity.drop_position = { entity.position.x + offset, entity.position.y }
-		entity.pickup_position = { entity.position.x - 0.5, entity.position.y }
+		entity.drop_position = { entity.position.x + pOffset, entity.position.y }
+		entity.pickup_position = { entity.position.x - dOffset, entity.position.y }
 	end
 end
 
@@ -80,14 +82,12 @@ script.on_event(defines.events.on_selected_entity_changed, function(evt)
 	local entity = evt.last_entity
 	if entity and string.match(entity.name, "arrow") then
 
-		-- game.players[1].print(serpent.block { { entity.drop_position.x - entity.position.x, entity.drop_position.y - entity.position.y }, { entity.pickup_position.x - entity.position.x, entity.pickup_position.y - entity.position.y } })
 		local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
 		local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
-		if ((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 1.1484375)
-				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 1.1484375)
+		if ((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
+				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625)
 		then
 			fix_positions(entity)
-			-- game.players[1].print("Don't change position parameters please :)")
 		end
 
 		if entity and string.match(entity.name, "arrow") then
@@ -105,8 +105,8 @@ script.on_event(defines.events.on_gui_closed, function(evt)
 
 		local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
 		local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
-		if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 1.1484375)
-				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 1.1484375))
+		if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
+				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
 				and entity.active
 		then
 			fix_positions(entity)
@@ -128,3 +128,4 @@ script.on_event(defines.events.on_player_rotated_entity, function(evt)
 end)
 
 -- game.players[1].print("hoi")
+-- game.players[1].print(serpent.block {})
