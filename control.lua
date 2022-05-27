@@ -28,7 +28,7 @@ function build_entity(evt)
 	if string.match(entity.name, "arrow") then
 		create_arrow(entity.name, entity, direction)
 		entity.inserter_stack_size_override = 1
-		if string.match(entity.name, "stack") then
+		if entity.prototype.stack then
 			entity.inserter_stack_size_override = 3
 		end
 	end
@@ -92,7 +92,7 @@ script.on_event(defines.events.on_selected_entity_changed, function(evt)
 
 		if entity and string.match(entity.name, "arrow") then
 			entity.inserter_stack_size_override = 1
-			if string.match(entity.name, "stack") then
+			if entity.prototype.stack then
 				entity.inserter_stack_size_override = 3
 			end
 		end
@@ -114,7 +114,7 @@ script.on_event(defines.events.on_gui_closed, function(evt)
 		end
 
 		entity.inserter_stack_size_override = 1
-		if string.match(entity.name, "stack") then
+		if entity.prototype.stack then
 			entity.inserter_stack_size_override = 3
 		end
 	end
@@ -127,5 +127,5 @@ script.on_event(defines.events.on_player_rotated_entity, function(evt)
 	end
 end)
 
--- game.players[1].print("hoi")
 -- game.players[1].print(serpent.block {})
+-- game.players[1].print("hoi")

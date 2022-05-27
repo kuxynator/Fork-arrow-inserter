@@ -1,0 +1,50 @@
+---------------------------------------------------------------------------------------------------
+Version: 0.4.0
+Date: 2022.05.26
+  Changes:
+    - Support of Krastorio2
+    - Added changelog
+---------------------------------------------------------------------------------------------------
+Version: 0.3.2
+Date: 2022.05.26
+  Changes:
+    - Long arrow behaves more like it should :)  Thanks @Stringweasel
+---------------------------------------------------------------------------------------------------
+Version: 0.3.1
+Date: 2022.05.26
+  Changes:
+    - Compatibility with any mod that changes pickup/drop positions  Thanks @Dominiquini
+---------------------------------------------------------------------------------------------------
+Version: 0.3.0
+Date: 2022.05.25
+  Changes:
+    - Added long arrow that behaves like basic inserter
+    - Added bobinserter compatibility
+  Optimisations:
+    - Internal function tweaks to make code even more expandable
+    - Basic error handling
+    - Added mini-tutorial on creating new arrow, with all needed and optional variables
+---------------------------------------------------------------------------------------------------
+Version: 0.2.1
+Date: 2022.05.24
+  Optimisations:
+    - Internal function tweaks to make code easily expandable
+---------------------------------------------------------------------------------------------------
+Version: 0.2.0
+Date: 2022.05.24
+  Changes:
+    - Change recipes and energy
+---------------------------------------------------------------------------------------------------
+Version: 0.1.1
+Date: 2022.05.24
+  Info:
+    - Removed annoying "hoi" message when destroying arrow
+---------------------------------------------------------------------------------------------------
+Version: 0.1.0
+Date: 2022.05.23
+  Info:
+    - Initial release
+  Locale:
+    - English are available
+  License:
+    - MIT

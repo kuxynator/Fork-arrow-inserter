@@ -20,7 +20,7 @@ local function create_entity(info)
 
 	local name = prefix .. "arrow"
 
-	local eBase = table.deepcopy(data.raw["inserter"][base_name]) or table.deepcopy(data.raw["inserter"][prefix .. "inserter"])
+	local eBase = table.deepcopy(data.raw.inserter[base_name]) or table.deepcopy(data.raw.inserter[prefix .. "inserter"])
 	tags = tags or {
 		long = false
 	}
@@ -53,9 +53,8 @@ local function create_entity(info)
 	eBase.protected_from_tile_building = false
 	eBase.tile_height = 0
 	eBase.tile_width = 1
-	-- eBase.draw_inserter_arrow = false
+	eBase.draw_inserter_arrow = false
 	eBase.chases_belt_items = false
-	-- eBase.draw_held_item = false
 	eBase.hand_size = 0.05
 	eBase.hand_base_picture = empty_sheet
 	eBase.hand_base_shadow = empty_sheet
@@ -69,7 +68,6 @@ local function create_entity(info)
 	eBase.platform_picture.sheet.hr_version.shift = { 0, 0 }
 	eBase.platform_picture.sheet.filename = "__arrow-inserter__/arrow.png"
 	eBase.platform_picture.sheet.hr_version.tint = tint
-	-- eBase.platform_picture.sheet.hr_version.tint.a = 0.95
 	eBase.platform_picture.sheet.hr_version.filename = "__arrow-inserter__/arrow.png"
 
 	create_constant_combinator(eBase, tint)
