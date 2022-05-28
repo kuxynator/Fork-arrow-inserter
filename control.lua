@@ -10,6 +10,10 @@ local get_entity = {
 }
 
 local function create_arrow(arrow_name, inserter, direction)
+	if game.active_mods["bobinserters"] then
+		arrow_name = arrow_name:gsub("long%-", "")
+		arrow_name = arrow_name:gsub("stack%-", "")
+	end
 	local loader = inserter.surface.create_entity {
 		name = arrow_name .. "_arr",
 		position = inserter.position,
