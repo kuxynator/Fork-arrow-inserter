@@ -1,7 +1,19 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.0
+Date: 2022.05.29
+  Features:
+    - Support of Squeak Through
+    - Investigating Bob's mods! 
+      - Added Turbo arrow
+      - Arrow recipes optimised for bobelectronics
+      - Arrows have different rotation behaviour if bobinserters installed!
+        - Instead of rotating it now switches modes
+        - Every new mode is locked behind research
+        - normal(open) -> long(long-inserters-1) -> stack(More-inserters-1) -> stack-long(Long-inserters-2)
+---------------------------------------------------------------------------------------------------
 Version: 0.4.0
-Date: 2022.05.26
-  Changes:
+Date: 2022.05.27
+  Features:
     - Support of Krastorio2
     - Added changelog
 ---------------------------------------------------------------------------------------------------
@@ -17,13 +29,12 @@ Date: 2022.05.26
 ---------------------------------------------------------------------------------------------------
 Version: 0.3.0
 Date: 2022.05.25
-  Changes:
+  Features:
     - Added long arrow that behaves like basic inserter
     - Added bobinserter compatibility
+    - Added mini-tutorial on creating new arrow, with all needed and optional variables
   Optimisations:
     - Internal function tweaks to make code even more expandable
-    - Basic error handling
-    - Added mini-tutorial on creating new arrow, with all needed and optional variables
 ---------------------------------------------------------------------------------------------------
 Version: 0.2.1
 Date: 2022.05.24

@@ -21,23 +21,27 @@ local function create_arrow(arrow_name, inserter, direction)
 	return loader
 end
 
+local function fix_stack_size(entity)
+	entity.inserter_stack_size_override = 1 + math.floor(entity.force.inserter_stack_size_bonus / 2.5)
+	if entity.prototype.stack then
+		entity.inserter_stack_size_override = 1 + math.floor(entity.force.stack_inserter_capacity_bonus / 2.5)
+	end
+end
+
 function build_entity(evt)
 	local entity = get_entity[evt.name](evt)
 
-	local direction = entity.direction
 	if string.match(entity.name, "arrow") then
+		local direction = entity.direction
 		create_arrow(entity.name, entity, direction)
-		entity.inserter_stack_size_override = 1
-		if entity.prototype.stack then
-			entity.inserter_stack_size_override = 3
-		end
+		fix_stack_size(entity)
 	end
 end
 
 function destroy_entity(evt)
 	local entity = get_entity[evt.name](evt)
-	if string.find(entity.name, "arrow") then
-		local a = entity.surface.find_entity(entity.name .. "_arr", entity.position)
+	if entity.name:find("arrow") then
+		local a = game.players[1].surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }[1]
 		if a then a.destroy() end
 	end
 end
@@ -68,6 +72,65 @@ function fix_positions(entity)
 	end
 end
 
+local function check_positions(entity)
+	local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
+	local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
+	if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
+			or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
+			and entity.active
+	then
+		fix_positions(entity)
+	end
+end
+
+local function long_stack_next(entity)
+	local eName = entity.prototype.items_to_place_this[1].name
+	local direction = entity.direction
+	local position = entity.position
+	local force = entity.force
+	local surface = entity.surface
+	surface.create_entity { name = "" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+end
+
+local function norm_next(entity)
+	if entity.force.technologies["long-inserters-1"].researched then
+		local eName = entity.prototype.items_to_place_this[1].name
+		local direction = entity.direction
+		local position = entity.position
+		local force = entity.force
+		local surface = entity.surface
+		surface.create_entity { name = "long-" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+	else
+		long_stack_next(entity)
+	end
+end
+
+local function long_next(entity)
+	if entity.force.technologies["more-inserters-1"].researched then
+		local eName = entity.prototype.items_to_place_this[1].name
+		local direction = entity.direction
+		local position = entity.position
+		local force = entity.force
+		local surface = entity.surface
+		surface.create_entity { name = "stack-" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+	else
+		long_stack_next(entity)
+	end
+end
+
+local function stack_next(entity)
+	if entity.force.technologies["long-inserters-2"].researched then
+		local eName = entity.prototype.items_to_place_this[1].name
+		local direction = entity.direction
+		local position = entity.position
+		local force = entity.force
+		local surface = entity.surface
+		surface.create_entity { name = "stack-long-" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+	else
+		long_stack_next(entity)
+	end
+end
+
 script.on_event(defines.events.on_built_entity, build_entity)
 script.on_event(defines.events.on_robot_built_entity, build_entity)
 script.on_event(defines.events.script_raised_built, build_entity)
@@ -80,50 +143,48 @@ script.on_event(defines.events.script_raised_destroy, destroy_entity)
 
 script.on_event(defines.events.on_selected_entity_changed, function(evt)
 	local entity = evt.last_entity
-	if entity and string.match(entity.name, "arrow") then
-
-		local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
-		local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
-		if ((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
-				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625)
-		then
-			fix_positions(entity)
-		end
-
-		if entity and string.match(entity.name, "arrow") then
-			entity.inserter_stack_size_override = 1
-			if entity.prototype.stack then
-				entity.inserter_stack_size_override = 3
-			end
-		end
+	if entity and entity.type == "inserter" and string.match(entity.name, "arrow") then
+		check_positions(entity)
+		fix_stack_size(entity)
 	end
 end)
 
 script.on_event(defines.events.on_gui_closed, function(evt)
 	local entity = evt.entity
-	if entity and string.match(entity.name, "arrow") then
-
-		local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
-		local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
-		if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
-				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
-				and entity.active
-		then
-			fix_positions(entity)
-			-- game.players[1].print("Don't change position parameters please :)")
-		end
-
-		entity.inserter_stack_size_override = 1
-		if entity.prototype.stack then
-			entity.inserter_stack_size_override = 3
-		end
+	if entity and entity.type == "inserter" and string.match(entity.name, "arrow") then
+		check_positions(entity)
+		fix_stack_size(entity)
 	end
 end)
 
 script.on_event(defines.events.on_player_rotated_entity, function(evt)
 	local entity = evt.entity
 	if string.find(entity.name, "arrow") then
-		entity.surface.find_entity(entity.name .. "_arr", entity.position).direction = (entity.direction + 4) % 8
+		if not game.active_mods["bobinserters"] then
+			entity.surface.find_entity(entity.name .. "_arr", entity.position).direction = (entity.direction + 4) % 8
+			return
+		end
+		entity.direction = (entity.direction + 4) % 8
+
+		local is_long = entity.name:find("long")
+		local is_stack = entity.name:find("stack")
+		if not is_long and not is_stack then
+			norm_next(entity)
+			return
+		end
+		if is_long and not is_stack then
+			long_next(entity)
+			return
+		end
+		if not is_long and is_stack then
+			stack_next(entity)
+			return
+		end
+		if is_long and is_stack then
+			long_stack_next(entity)
+			return
+		end
+
 	end
 end)
 

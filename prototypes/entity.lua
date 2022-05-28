@@ -11,39 +11,19 @@ local empty_sheet = {
 	}
 }
 
-local function create_entity(info)
-	local base_name = info.base_name or nil
-	local prefix = info.prefix
-	local tint = info.tint
-	local energy = info.energy
-	local tags = info.tags
-
-	local name = prefix .. "arrow"
-
-	local eBase = table.deepcopy(data.raw.inserter[base_name]) or table.deepcopy(data.raw.inserter[prefix .. "inserter"])
-	tags = tags or {
-		long = false
-	}
-
-	eBase.name = name
-	eBase.minable.result = name
-	eBase.order = "z[arrow]-[" .. name .. "]"
+local function constants(eBase, tint, energy)
 	eBase.icons = { {
 		icon = "__arrow-inserter__/arrow.png",
 		icon_size = 64,
 		tint = tint
 	} }
 	eBase.selection_priority = 255
+	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
 	eBase.energy_per_rotation = energy.active or eBase.energy_per_rotation
 	eBase.energy_source.drain = energy.passive or eBase.energy_source.drain
-	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
 	eBase.allow_custom_vectors = false
 	eBase.pickup_position = { 0, -0.5 }
 	eBase.insert_position = { 0, 0.35 }
-	if tags.long then
-		eBase.pickup_position = { 0, -1.5 }
-		eBase.insert_position = { 0, 1.35 }
-	end
 	eBase.collision_box = { { -0.25, -0.01 }, { 0.25, 0.01 } }
 	eBase.selection_box = { { -0.4, -0.2 }, { 0.4, 0.2 } }
 	eBase.collision_mask = { "player-layer", }
@@ -69,6 +49,72 @@ local function create_entity(info)
 	eBase.platform_picture.sheet.filename = "__arrow-inserter__/arrow.png"
 	eBase.platform_picture.sheet.hr_version.tint = tint
 	eBase.platform_picture.sheet.hr_version.filename = "__arrow-inserter__/arrow.png"
+end
+
+local function tag_works(eBase, tags)
+	if tags.long then
+		eBase.pickup_position = { 0, -1.5 }
+		eBase.insert_position = { 0, 1.35 }
+		if not eBase.name:find("long-") then
+			eBase.name = "long-" .. eBase.name
+		end
+	end
+	if tags.stack then
+		eBase.stack = true
+		if not eBase.name:find("stack-") then
+			eBase.name = "stack-" .. eBase.name
+		end
+	end
+	return eBase
+end
+
+local function local_name(eBase)
+	eBase.localised_name = { "entity-name." .. eBase.name }
+end
+
+local function create_entity(info)
+	local base_name = info.base_name or nil
+	local prefix = info.prefix
+	local name = prefix .. "arrow"
+	local tint = info.tint
+	local energy = info.energy
+
+	local eBase = table.deepcopy(data.raw.inserter[base_name])
+			or table.deepcopy(data.raw.inserter[prefix .. "inserter"])
+
+	local tags = info.tags or {
+		long = false,
+		stack = false
+	}
+
+	eBase.name = name
+	eBase.minable.result = name
+	eBase.order = "z[arrow]-[" .. name .. "]"
+
+	constants(eBase, tint, energy)
+	local_name(eBase)
+
+	if mods["Squeak Through"] then
+		eBase.collision_box = { { 0, 0 }, { 0, 0 } }
+	end
+
+	if mods["bobinserters"] then
+		eBase.placeable_by = { item = eBase.name, count = 1 }
+		local tmp = table.deepcopy(eBase)
+		tag_works(tmp, { long = true })
+		local_name(tmp)
+		data:extend { tmp }
+		tmp = table.deepcopy(eBase)
+		tag_works(tmp, { stack = true })
+		local_name(tmp)
+		data:extend { tmp }
+		tmp = table.deepcopy(eBase)
+		tag_works(tmp, { long = true, stack = true })
+		local_name(tmp)
+		data:extend { tmp }
+	end
+
+	tag_works(eBase, tags)
 
 	create_constant_combinator(eBase, tint)
 	data:extend { eBase }

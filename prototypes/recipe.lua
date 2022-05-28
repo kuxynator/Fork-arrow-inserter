@@ -11,17 +11,35 @@ local empty_sheet = {
 	}
 }
 
+local function tag_name(name, tags)
+	if tags.long and not name:find("long-") then
+		name = "long-" .. name
+	end
+	if tags.stack and not name:find("stack-") then
+		name = "stack-" .. name
+	end
+	return name
+end
+
 local function create_recipe(info)
 	local base_name = info.base_name or nil
 	local prefix = info.prefix
 	local tint = info.tint
 	local recipe = info.recipe
+	local tags = info.tags or {
+		long = false,
+		stack = false
+	}
 
 	local name = prefix .. "arrow"
+	if not mods["bobinserters"] then
+		name = tag_name(name, tags)
+	end
 
 	local rBase = table.deepcopy(data.raw.recipe[base_name]) or table.deepcopy(data.raw.recipe[prefix .. "inserter"])
 
 	rBase.name = name
+	rBase.localised_name = { "entity-name." .. rBase.name }
 	rBase.result = name
 	rBase.order = "z[arrow]-[" .. name .. "]"
 	rBase.enabled = true

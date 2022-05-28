@@ -1,13 +1,8 @@
-local entities = require("prototypes.entity")
-local items = require("prototypes.item")
-local recipes = require("prototypes.recipe")
-
-
 -- info have following structure:
 --
 -- info_name = {
--- 	base_name:														string, optional if prefix gives name of inserter on adding "inserter" in the end
--- 																				name of existing inserter to be used as base
+-- 	base_name:														string, name of existing inserter to be used as base
+-- 																				optional if prefix gives name of inserter on adding "inserter" in the end
 --
 -- 	prefix:																string, custom prefix, example: "example-prefix-007-"
 --
@@ -26,7 +21,11 @@ local recipes = require("prototypes.recipe")
 --		long: bool
 --	}:
 -- }
+-- OUTDATED!!!!!!!
 
+local entities = require("prototypes.entity")
+local items = require("prototypes.item")
+local recipes = require("prototypes.recipe")
 
 local function create(info)
 	entities.create_entity(info)
@@ -36,7 +35,8 @@ end
 
 local preset = {}
 preset.normie = {
-	prefix = "",
+	base_name = "inserter",
+	prefix = "yellow-",
 	tint = { r = 1.0, g = 1.0, b = 0.0 },
 	energy = { passive = "150W", active = "4.5kJ" },
 	recipe = { {
@@ -44,24 +44,11 @@ preset.normie = {
 		{ "electronic-circuit", 1 }
 	}, 2 }
 }
-preset.fast_one = {
-	prefix = "fast-",
-	tint = { r = 0.0, g = 0.5, b = 1.0 },
-	energy = { passive = "200W", active = "6kJ" },
-	recipe = { {
-		{ "fast-inserter", 1 },
-		{ "steel-plate", 1 }
-	}, 2 }
-}
-preset.strong_one = {
-	prefix = "stack-",
-	tint = { r = 0.5, g = 1.0, b = 0.4 },
-	energy = { passive = "400W", active = "16kJ" },
-	recipe = { {
-		{ "stack-inserter", 1 },
-		{ "advanced-circuit", 1 }
-	}, 2 }
-}
+if mods["bobelectronics"] then
+	preset.normie.recipe[1][2][1] = "basic-circuit-board"
+	preset.normie.recipe[1][2][2] = 2
+end
+
 preset.want_a_longer_one = {
 	base_name = "long-handed-inserter",
 	prefix = "long-",
@@ -73,6 +60,67 @@ preset.want_a_longer_one = {
 	}, 2 },
 	tags = { long = true }
 }
+if mods["bobelectronics"] then
+	preset.want_a_longer_one.recipe[1][2][2] = 2
+end
+if mods["boblogistics"] or mods["bobinserters"] then
+	preset.want_a_longer_one.tags = {}
+	preset.want_a_longer_one.prefix = "red-"
+end
+
+preset.fast_one = {
+	base_name = "fast-inserter",
+	prefix = "fast-",
+	tint = { r = 0.0, g = 0.5, b = 1.0 },
+	energy = { passive = "200W", active = "6kJ" },
+	recipe = { {
+		{ "fast-inserter", 1 },
+		{ "steel-plate", 1 }
+	}, 2 }
+}
+if mods["bobelectronics"] then
+	preset.fast_one.recipe[1][2][1] = "advanced-circuit"
+	preset.fast_one.recipe[1][2][2] = 2
+end
+if mods["boblogistics"] or mods["bobinserters"] then
+	preset.fast_one.prefix = "blue-"
+end
+
+preset.strong_one = {
+	base_name = "stack-inserter",
+	prefix = "stack-",
+	tint = { r = 0.5, g = 1.0, b = 0.4 },
+	energy = { passive = "400W", active = "16kJ" },
+	recipe = { {
+		{ "stack-inserter", 1 },
+		{ "advanced-circuit", 1 }
+	}, 2 },
+	tags = { stack = true }
+}
+if mods["bobelectronics"] then
+	preset.strong_one.recipe[1][1][1] = "express-inserter"
+	preset.strong_one.recipe[1][2][1] = "advanced-processing-unit"
+	preset.strong_one.recipe[1][2][2] = 2
+end
+if mods["boblogistics"] or mods["bobinserters"] then
+	preset.strong_one.prefix = "green-"
+	preset.strong_one.tags = {}
+end
+if mods["boblogistics"] then
+	preset.strong_one.base_name = "express-inserter"
+end
+
+preset.purple_one = {
+	base_name = "turbo-inserter",
+	prefix = "purple-",
+	tint = { r = 0.4375, g = 0.0, b = 0.5 },
+	energy = { passive = "400W", active = "16kJ" },
+	recipe = { {
+		{ "turbo-inserter", 1 },
+		{ "processing-unit", 2 }
+	}, 2 }
+}
+
 preset.fast_boi = {
 	base_name = "kr-superior-inserter",
 	prefix = "superior-",
@@ -104,5 +152,11 @@ create(preset.want_a_longer_one)
 -- kr2
 if mods["Krastorio2"] then
 	create(preset.fast_boi)
-	create(preset.long_boi)
+	if not (mods["boblogistics"] or mods["bobinserters"]) then
+		create(preset.long_boi)
+	end
+end
+
+if mods["boblogistics"] then
+	create(preset.purple_one)
 end
