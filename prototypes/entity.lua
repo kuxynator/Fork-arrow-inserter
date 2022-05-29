@@ -95,7 +95,7 @@ local function create_entity(info)
 	local_name(eBase)
 
 	if mods["Squeak Through"] then
-		eBase.collision_box = { { 0, 0 }, { 0, 0 } }
+		eBase.collision_box = { { -0.01, -0.01 }, { 0.01, 0.01 } }
 	end
 
 	if mods["bobinserters"] then

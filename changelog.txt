@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.1
+Date: 2022.05.29
+  Changes:
+    - Fixed migration
+    - Fixed Bug with Squeak Through, where you can place any amount of arrows in one place
+---------------------------------------------------------------------------------------------------
 Version: 0.5.0
 Date: 2022.05.29
   Features:
