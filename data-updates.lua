@@ -1,11 +1,13 @@
 local entities = require("prototypes.entity")
 local items = require("prototypes.item")
 local recipes = require("prototypes.recipe")
+local tech = require('prototypes.technology')
 
 local function create(info)
 	entities.create_entity(info)
 	items.create_item(info)
 	recipes.create_recipe(info)
+	tech.add_to_tech(info)
 end
 
 local preset = {}
@@ -120,9 +122,9 @@ preset.long_boi = {
 
 -- vanilla
 create(preset.normie)
+create(preset.want_a_longer_one)
 create(preset.fast_one)
 create(preset.strong_one)
-create(preset.want_a_longer_one)
 
 -- kr2
 if mods["Krastorio2"] then

@@ -1,10 +1,17 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.3
+Date: 2022.06.25
+  Features:
+    - Recipes are now unlocked along with their respective inserters
+  Changes:
+    - Removed stack limitation
+---------------------------------------------------------------------------------------------------
 Version: 0.5.2
 Date: 2022.06.25
   Changes:
     - Fixed low-res non-tinted, non-scaled base texture
     - Copied description from mod portal
-    - K2 + SE support
+    - Attempt to K2 + SE support
 ---------------------------------------------------------------------------------------------------
 Version: 0.5.1
 Date: 2022.05.29

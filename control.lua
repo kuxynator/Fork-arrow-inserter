@@ -25,27 +25,20 @@ local function create_arrow(arrow_name, inserter, direction)
 	return loader
 end
 
-local function fix_stack_size(entity)
-	entity.inserter_stack_size_override = 1 + math.floor(entity.force.inserter_stack_size_bonus / 2.5)
-	if entity.prototype.stack then
-		entity.inserter_stack_size_override = 1 + math.floor(entity.force.stack_inserter_capacity_bonus / 2.5)
-	end
-end
-
 function build_entity(evt)
 	local entity = get_entity[evt.name](evt)
 
 	if string.match(entity.name, "arrow") then
 		local direction = entity.direction
 		create_arrow(entity.name, entity, direction)
-		fix_stack_size(entity)
 	end
 end
 
 function destroy_entity(evt)
 	local entity = get_entity[evt.name](evt)
 	if entity.name:find("arrow") then
-		local a = game.players[1].surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }[1]
+		local a = game.players[1].surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }[
+				1]
 		if a then a.destroy() end
 	end
 end
@@ -93,7 +86,8 @@ local function long_stack_next(entity)
 	local position = entity.position
 	local force = entity.force
 	local surface = entity.surface
-	surface.create_entity { name = "" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+	surface.create_entity { name = "" .. eName, position = position, direction = direction, fast_replace = true,
+		force = force, spill = false }
 end
 
 local function norm_next(entity)
@@ -103,7 +97,8 @@ local function norm_next(entity)
 		local position = entity.position
 		local force = entity.force
 		local surface = entity.surface
-		surface.create_entity { name = "long-" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+		surface.create_entity { name = "long-" .. eName, position = position, direction = direction, fast_replace = true,
+			force = force, spill = false }
 	else
 		long_stack_next(entity)
 	end
@@ -116,7 +111,8 @@ local function long_next(entity)
 		local position = entity.position
 		local force = entity.force
 		local surface = entity.surface
-		surface.create_entity { name = "stack-" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+		surface.create_entity { name = "stack-" .. eName, position = position, direction = direction, fast_replace = true,
+			force = force, spill = false }
 	else
 		long_stack_next(entity)
 	end
@@ -129,7 +125,8 @@ local function stack_next(entity)
 		local position = entity.position
 		local force = entity.force
 		local surface = entity.surface
-		surface.create_entity { name = "stack-long-" .. eName, position = position, direction = direction, fast_replace = true, force = force, spill = false }
+		surface.create_entity { name = "stack-long-" .. eName, position = position, direction = direction, fast_replace = true,
+			force = force, spill = false }
 	else
 		long_stack_next(entity)
 	end
@@ -149,7 +146,6 @@ script.on_event(defines.events.on_selected_entity_changed, function(evt)
 	local entity = evt.last_entity
 	if entity and entity.type == "inserter" and string.match(entity.name, "arrow") then
 		check_positions(entity)
-		fix_stack_size(entity)
 	end
 end)
 
@@ -157,7 +153,6 @@ script.on_event(defines.events.on_gui_closed, function(evt)
 	local entity = evt.entity
 	if entity and entity.type == "inserter" and string.match(entity.name, "arrow") then
 		check_positions(entity)
-		fix_stack_size(entity)
 	end
 end)
 

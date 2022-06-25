@@ -21,6 +21,8 @@ local function tag_name(name, tags)
 	return name
 end
 
+local count = 0
+
 local function create_recipe(info)
 	local base_name = info.base_name or nil
 	local prefix = info.prefix
@@ -41,8 +43,7 @@ local function create_recipe(info)
 	rBase.name = name
 	rBase.localised_name = { "entity-name." .. rBase.name }
 	rBase.result = name
-	rBase.order = "z[arrow]-[" .. name .. "]"
-	rBase.enabled = true
+	rBase.order = "z[arrow]-" .. count .. "[" .. name .. "]"
 	rBase.ingredients = recipe[1] or rBase.ingredients
 	rBase.result_count = recipe[2] or rBase.result_count
 	rBase.icons = { {
@@ -51,6 +52,7 @@ local function create_recipe(info)
 		tint = tint
 	} }
 
+	count = count + 1
 	data:extend { rBase }
 end
 
