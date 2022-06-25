@@ -26,7 +26,7 @@ local function constants(eBase, tint, energy)
 	eBase.insert_position = { 0, 0.35 }
 	eBase.collision_box = { { -0.25, -0.01 }, { 0.25, 0.01 } }
 	eBase.selection_box = { { -0.4, -0.2 }, { 0.4, 0.2 } }
-	eBase.collision_mask = { "player-layer", }
+	eBase.collision_mask = { "item-layer", "object-layer", "player-layer", }
 	eBase.flags = { "placeable-neutral", "placeable-player", "player-creation" }
 	eBase.fast_replaceable_group = "arrow"
 	eBase.next_upgrade = ""
@@ -42,11 +42,13 @@ local function constants(eBase, tint, energy)
 	eBase.hand_closed_shadow = empty_sheet
 	eBase.hand_open_picture = empty_sheet
 	eBase.hand_open_shadow = empty_sheet
+	eBase.platform_picture.sheet.scale = 0.5
 	eBase.platform_picture.sheet.size = 64
 	eBase.platform_picture.sheet.hr_version.size = 64
 	eBase.platform_picture.sheet.shift = { 0, 0 }
 	eBase.platform_picture.sheet.hr_version.shift = { 0, 0 }
 	eBase.platform_picture.sheet.filename = "__arrow-inserter__/arrow.png"
+	eBase.platform_picture.sheet.tint = tint
 	eBase.platform_picture.sheet.hr_version.tint = tint
 	eBase.platform_picture.sheet.hr_version.filename = "__arrow-inserter__/arrow.png"
 end
@@ -95,7 +97,7 @@ local function create_entity(info)
 	local_name(eBase)
 
 	if mods["Squeak Through"] then
-		eBase.collision_box = { { -0.01, -0.01 }, { 0.01, 0.01 } }
+		eBase.collision_mask[3] = nil
 	end
 
 	if mods["bobinserters"] then

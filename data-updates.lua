@@ -1,28 +1,3 @@
--- info have following structure:
---
--- info_name = {
--- 	base_name:														string, name of existing inserter to be used as base
--- 																				optional if prefix gives name of inserter on adding "inserter" in the end
---
--- 	prefix:																string, custom prefix, example: "example-prefix-007-"
---
--- 	tint = { r, g, b, a: optional }:			colors with range from 0 to 1
---
--- 	energy = { passive, active }:					string with "W"(energy/sec) or "J"(energy/tick) in end,
--- 																				with multipliers "k, M, G, T, P, E, Z, Y", each 1000 times higher that previous
---
--- 	recipe = {{														recipe_shortcut
--- 		{"ingridient-name-1", ingr_amount},
--- 		{"ingridient-name-2", ingr_amount}
--- 	}, output_amount }:
---
---
---	tags = {															toggles for special effects, every one is optional because short code is nice to read
---		long: bool
---	}:
--- }
--- OUTDATED!!!!!!!
-
 local entities = require("prototypes.entity")
 local items = require("prototypes.item")
 local recipes = require("prototypes.recipe")
