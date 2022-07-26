@@ -37,9 +37,9 @@ end
 function destroy_entity(evt)
 	local entity = get_entity[evt.name](evt)
 	if entity.name:find("arrow") then
-		local a = game.players[1].surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }[
-				1]
-		if a then a.destroy() end
+		local a = game.players[1].surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }
+		if a[2] then a[2].destroy() end
+		if a[1] then a[1].destroy() end
 	end
 end
 
@@ -132,6 +132,22 @@ local function stack_next(entity)
 	end
 end
 
+local function picker_dollies_compat()
+	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
+		script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), function(evt)
+			local entity = evt.moved_entity
+			local pos = evt.start_pos
+			if entity.name:find("arrow") then
+				local a = game.players[1].surface.find_entities_filtered { position = pos, type = "constant-combinator" }[1]
+				if a then
+					a.destroy()
+					build_entity { name = 4, entity = entity }
+				end
+			end
+		end)
+	end
+end
+
 script.on_event(defines.events.on_built_entity, build_entity)
 script.on_event(defines.events.on_robot_built_entity, build_entity)
 script.on_event(defines.events.script_raised_built, build_entity)
@@ -186,6 +202,15 @@ script.on_event(defines.events.on_player_rotated_entity, function(evt)
 
 	end
 end)
+
+script.on_load(function()
+	picker_dollies_compat()
+end)
+
+script.on_init(function()
+	picker_dollies_compat()
+end)
+
 
 -- game.players[1].print(serpent.block {})
 -- game.players[1].print("hoi")

@@ -1,4 +1,22 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.6
+Date: 2022-07-26
+  Changes:
+    - Debug log leak removed
+  Features:
+    - Added option to add one filter slot (off by default)
+---------------------------------------------------------------------------------------------------
+Version: 0.5.5
+Date: 2022-07-26
+  Features:
+    - Picker dollies support
+    - You can place-and-delete arrow on top of phantom arrow bug, to remove it!
+---------------------------------------------------------------------------------------------------
+Version: 0.5.4
+Date: 2022.07.22
+  Changes:
+    - Recipes are newer overwritten now
+---------------------------------------------------------------------------------------------------
 Version: 0.5.3
 Date: 2022.06.25
   Features:

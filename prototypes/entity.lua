@@ -51,6 +51,9 @@ local function constants(eBase, tint, energy)
 	eBase.platform_picture.sheet.tint = tint
 	eBase.platform_picture.sheet.hr_version.tint = tint
 	eBase.platform_picture.sheet.hr_version.filename = "__arrow-inserter__/arrow.png"
+	if settings.startup["add-one-filter-slot"].value then
+		eBase.filter_count = 1
+	end
 end
 
 local function tag_works(eBase, tags)

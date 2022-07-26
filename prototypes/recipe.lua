@@ -44,6 +44,8 @@ local function create_recipe(info)
 	rBase.localised_name = { "entity-name." .. rBase.name }
 	rBase.result = name
 	rBase.order = "z[arrow]-" .. count .. "[" .. name .. "]"
+	rBase.normal = nil
+	rBase.expensive = nil
 	rBase.ingredients = recipe[1] or rBase.ingredients
 	rBase.result_count = recipe[2] or rBase.result_count
 	rBase.icons = { {
