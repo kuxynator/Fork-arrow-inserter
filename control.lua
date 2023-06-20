@@ -33,7 +33,6 @@ function build_entity(evt)
 		create_arrow(entity.name, entity, direction)
 	end
 
-	game.players[1].print(serpent.block {entity})
 	if string.match(entity.name, "arrow") then
 		local direction = entity.direction
 		create_arrow(entity.name, entity, direction)
@@ -43,7 +42,7 @@ end
 function destroy_entity(evt)
 	local entity = get_entity[evt.name](evt)
 	if entity.name:find("arrow") then
-		local a = game.players[1].surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }
+		local a = entity.surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }
 		if a[2] then a[2].destroy() end
 		if a[1] then a[1].destroy() end
 	end
@@ -142,7 +141,7 @@ local function picker_dollies_compat()
 			local entity = evt.moved_entity
 			local pos = evt.start_pos
 			if entity.name:find("arrow") then
-				local a = game.players[1].surface.find_entities_filtered { position = pos, type = "constant-combinator" }[1]
+				local a = entity.surface.find_entities_filtered { position = pos, type = "constant-combinator" }[1]
 				if a then
 					a.destroy()
 					build_entity { name = 4, entity = entity }
@@ -152,15 +151,22 @@ local function picker_dollies_compat()
 	end
 end
 
-script.on_event(defines.events.on_built_entity, build_entity)
-script.on_event(defines.events.on_robot_built_entity, build_entity)
-script.on_event(defines.events.script_raised_built, build_entity)
-script.on_event(defines.events.script_raised_revive, build_entity)
+local filter = {
+	{
+		filter = "type",
+		type = "inserter",
+	},
+}
 
-script.on_event(defines.events.on_player_mined_entity, destroy_entity)
-script.on_event(defines.events.on_robot_mined_entity, destroy_entity)
-script.on_event(defines.events.on_entity_died, destroy_entity)
-script.on_event(defines.events.script_raised_destroy, destroy_entity)
+script.on_event(defines.events.on_built_entity, build_entity, filter)
+script.on_event(defines.events.on_robot_built_entity, build_entity, filter)
+script.on_event(defines.events.script_raised_built, build_entity, filter)
+script.on_event(defines.events.script_raised_revive, build_entity, filter)
+
+script.on_event(defines.events.on_player_mined_entity, destroy_entity, filter)
+script.on_event(defines.events.on_robot_mined_entity, destroy_entity, filter)
+script.on_event(defines.events.on_entity_died, destroy_entity, filter)
+script.on_event(defines.events.script_raised_destroy, destroy_entity, filter)
 
 script.on_event(defines.events.on_selected_entity_changed, function(evt)
 	local entity = evt.last_entity
