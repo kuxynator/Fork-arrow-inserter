@@ -23,7 +23,7 @@ local function constants(eBase, tint, energy)
 	eBase.energy_source.drain = energy.passive or eBase.energy_source.drain
 	eBase.allow_custom_vectors = false
 	eBase.pickup_position = { 0, -0.5 }
-	eBase.insert_position = { 0, 0.35 }
+	eBase.insert_position = { -0.05, 0.35 }
 	eBase.collision_box = { { -0.25, -0.01 }, { 0.25, 0.01 } }
 	eBase.selection_box = { { -0.4, -0.2 }, { 0.4, 0.2 } }
 	eBase.collision_mask = { "item-layer", "object-layer", "player-layer", }
