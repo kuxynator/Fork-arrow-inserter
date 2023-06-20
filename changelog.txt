@@ -1,4 +1,12 @@
 ---------------------------------------------------------------------------------------------------
+Version: 0.5.7
+Date: 2023-06-20
+  Optimisations:
+    - entity.surface.find_entities_filtered instead of game.players[1].surface.find_entities_filtered (thanks to kuxynator)
+    - added filters to script.on_event (thanks to kuxynator)
+  Features:
+    - Added option to add one filter slot (off by default)
+---------------------------------------------------------------------------------------------------
 Version: 0.5.6
 Date: 2022-07-26
   Changes:
