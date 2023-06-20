@@ -32,6 +32,12 @@ function build_entity(evt)
 		local direction = entity.direction
 		create_arrow(entity.name, entity, direction)
 	end
+
+	game.players[1].print(serpent.block {entity})
+	if string.match(entity.name, "arrow") then
+		local direction = entity.direction
+		create_arrow(entity.name, entity, direction)
+	end
 end
 
 function destroy_entity(evt)
@@ -99,8 +105,6 @@ local function norm_next(entity)
 		local surface = entity.surface
 		surface.create_entity { name = "long-" .. eName, position = position, direction = direction, fast_replace = true,
 			force = force, spill = false }
-	else
-		long_stack_next(entity)
 	end
 end
 
