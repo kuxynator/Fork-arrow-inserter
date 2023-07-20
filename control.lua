@@ -75,13 +75,20 @@ function fix_positions(entity)
 end
 
 local function check_positions(entity)
-	local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
-	local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
-	if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
-			or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
-			and entity.active
-	then
-		fix_positions(entity)
+	if(game.active_mods["bobinserters"]) then --HACK:
+		-- I do not think we need to check this
+		--local relPick = get_relative_pickup_position(entity)
+		--local relDrop = get_relative_drop_position(entity)
+		--print("check_positions {"..relPick.x..", "..relPick.y.."} -> {"..relDrop.x..", "..relDrop.y.."}")
+	else
+		local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
+		local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
+		if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
+				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
+				and entity.active
+		then
+			fix_positions(entity)
+		end
 	end
 end
 
