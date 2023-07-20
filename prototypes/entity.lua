@@ -21,7 +21,7 @@ local function constants(eBase, tint, energy)
 	eBase.rotation_speed = eBase.rotation_speed * 4 / 5
 	eBase.energy_per_rotation = energy.active or eBase.energy_per_rotation
 	eBase.energy_source.drain = energy.passive or eBase.energy_source.drain
-	eBase.allow_custom_vectors = false
+	eBase.allow_custom_vectors = true --HACK:Kux 'true' is required for bobinserters, mod default: false
 	eBase.pickup_position = { 0, -0.5 }
 	eBase.insert_position = { -0.05, 0.35 }
 	eBase.collision_box = { { -0.25, -0.01 }, { 0.25, 0.01 } }
