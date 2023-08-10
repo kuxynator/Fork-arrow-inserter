@@ -1,54 +1,51 @@
-local get_entity = {
-	[67] = function(evt) return evt.entity end,
-	[6] = function(evt) return evt.created_entity end,
-	[14] = function(evt) return evt.created_entity end,
-	[79] = function(evt) return evt.entity end,
-	[81] = function(evt) return evt.entity end,
-	[66] = function(evt) return evt.entity end,
-	[4] = function(evt) return evt.entity end,
-	[80] = function(evt) return evt.entity end,
+require("lib/Entitiy")
+local this = {}
+
+local inserter_ghost_properties_to_copy = {
+	"name", "position",
+    "direction",
+	"drop_position",
+	"pickup_position",
+    "force",
+-- active
+-- destructible
+-- minable
+-- rotatable
+-- operable
+-- health
+-- direction
+-- orientation
+-- energy
+-- tags
+-- drop_position
+-- pickup_position
+-- drop_target
+-- pickup_target
+-- inserter_stack_size_override
+-- entity_label
+-- color
+-- last_user
+-- mining_progress
+-- bonus_mining_progress
+-- render_player
+-- render_to_forces
 }
 
-local function create_arrow(arrow_name, inserter, direction)
-	if game.active_mods["bobinserters"] then
-		arrow_name = arrow_name:gsub("long%-", "")
-		arrow_name = arrow_name:gsub("stack%-", "")
-	end
-	local loader = inserter.surface.create_entity {
-		name = arrow_name .. "_arr",
-		position = inserter.position,
-		direction = (direction + 4) % 8,
-		force = inserter.force,
-		type = "constant-combinator",
+function this.get_relative_pickup_position(entity) --HACK
+	return {
+		x = entity.pickup_position.x - entity.position.x,
+		y = entity.pickup_position.y - entity.position.y
 	}
-	loader.destructible = false
-	return loader
 end
 
-function build_entity(evt)
-	local entity = get_entity[evt.name](evt)
-
-	if string.match(entity.name, "arrow") then
-		local direction = entity.direction
-		create_arrow(entity.name, entity, direction)
-	end
-
-	if string.match(entity.name, "arrow") then
-		local direction = entity.direction
-		create_arrow(entity.name, entity, direction)
-	end
+function this.get_relative_drop_position(entity) --HACK
+	return {
+		x = entity.drop_position.x - entity.position.x,
+		y = entity.drop_position.y - entity.position.y
+	}
 end
 
-function destroy_entity(evt)
-	local entity = get_entity[evt.name](evt)
-	if entity.name:find("arrow") then
-		local a = entity.surface.find_entities_filtered { position = entity.position, type = "constant-combinator" }
-		if a[2] then a[2].destroy() end
-		if a[1] then a[1].destroy() end
-	end
-end
-
-function fix_positions(entity)
+function this.fix_positions(entity)
 	local look = (entity.orientation * 4)
 	local pOffset = 0.34765625
 	local dOffset = 0.5
@@ -74,153 +71,66 @@ function fix_positions(entity)
 	end
 end
 
-local function check_positions(entity)
-	local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
-	local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
-	if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
-			or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
-			and entity.active
-	then
-		fix_positions(entity)
-	end
-end
-
-local function long_stack_next(entity)
-	local eName = entity.prototype.items_to_place_this[1].name
-	local direction = entity.direction
-	local position = entity.position
-	local force = entity.force
-	local surface = entity.surface
-	surface.create_entity { name = "" .. eName, position = position, direction = direction, fast_replace = true,
-		force = force, spill = false }
-end
-
-local function norm_next(entity)
-	if entity.force.technologies["long-inserters-1"].researched then
-		local eName = entity.prototype.items_to_place_this[1].name
-		local direction = entity.direction
-		local position = entity.position
-		local force = entity.force
-		local surface = entity.surface
-		surface.create_entity { name = "long-" .. eName, position = position, direction = direction, fast_replace = true,
-			force = force, spill = false }
-	end
-end
-
-local function long_next(entity)
-	if entity.force.technologies["more-inserters-1"].researched then
-		local eName = entity.prototype.items_to_place_this[1].name
-		local direction = entity.direction
-		local position = entity.position
-		local force = entity.force
-		local surface = entity.surface
-		surface.create_entity { name = "stack-" .. eName, position = position, direction = direction, fast_replace = true,
-			force = force, spill = false }
+function this.check_positions(entity)
+	if(game.active_mods["bobinserters"]) then --HACK:
+		-- I do not think we need to check this
+		--local relPick = get_relative_pickup_position(entity)
+		--local relDrop = get_relative_drop_position(entity)
+		--print("check_positions {"..relPick.x..", "..relPick.y.."} -> {"..relDrop.x..", "..relDrop.y.."}")
 	else
-		long_stack_next(entity)
+		local xCheck = math.abs(entity.drop_position.x - entity.pickup_position.x)
+		local yCheck = math.abs(entity.drop_position.y - entity.pickup_position.y)
+		if (((entity.orientation * 4) % 2 == 1 and xCheck ~= 0.84765625 and xCheck ~= 2.84765625)
+				or ((entity.orientation * 4) % 2 == 0 and yCheck ~= 0.84765625 and yCheck ~= 2.84765625))
+				and entity.active
+		then
+			this.fix_positions(entity)
+		end
 	end
 end
 
-local function stack_next(entity)
-	if entity.force.technologies["long-inserters-2"].researched then
-		local eName = entity.prototype.items_to_place_this[1].name
-		local direction = entity.direction
-		local position = entity.position
-		local force = entity.force
-		local surface = entity.surface
-		surface.create_entity { name = "stack-long-" .. eName, position = position, direction = direction, fast_replace = true,
-			force = force, spill = false }
-	else
-		long_stack_next(entity)
+function this.picker_dollies_compat()
+	if not remote.interfaces["PickerDollies"] or not remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then return end
+
+	local function on_dolly_moved_entity_id(e)
+		local entity = e.moved_entity
+		local pos = e.start_pos
+		if entity.name:match("%-arrow$") then
+			local list = entity.surface.find_entities_filtered { position = pos, type = "constant-combinator",name=entity.name.."_arr" }
+			for _,a in ipairs(list) do a.destroy() end
+			--this.on_built_entity { name = defines.events.on_entity_died, entity = entity } --TODO why on_entity_died ??
+			this.create_arrow(entity)
+		end
 	end
+
+	script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), on_dolly_moved_entity_id)
 end
 
-local function picker_dollies_compat()
-	if remote.interfaces["PickerDollies"] and remote.interfaces["PickerDollies"]["dolly_moved_entity_id"] then
-		script.on_event(remote.call("PickerDollies", "dolly_moved_entity_id"), function(evt)
-			local entity = evt.moved_entity
-			local pos = evt.start_pos
-			if entity.name:find("arrow") then
-				local a = entity.surface.find_entities_filtered { position = pos, type = "constant-combinator" }[1]
-				if a then
-					a.destroy()
-					build_entity { name = 4, entity = entity }
-				end
-			end
-		end)
-	end
-end
-
-local filter = {
-	{
-		filter = "type",
-		type = "inserter",
-	},
-}
-
-script.on_event(defines.events.on_built_entity, build_entity, filter)
-script.on_event(defines.events.on_robot_built_entity, build_entity, filter)
-script.on_event(defines.events.script_raised_built, build_entity, filter)
-script.on_event(defines.events.script_raised_revive, build_entity, filter)
-
-script.on_event(defines.events.on_player_mined_entity, destroy_entity, filter)
-script.on_event(defines.events.on_robot_mined_entity, destroy_entity, filter)
-script.on_event(defines.events.on_entity_died, destroy_entity, filter)
-script.on_event(defines.events.script_raised_destroy, destroy_entity, filter)
+require("events/on_built_entity")
+require("events/on_destroyed_entity")
+require("events/on_player_rotated_entity")
 
 script.on_event(defines.events.on_selected_entity_changed, function(evt)
 	local entity = evt.last_entity
-	if entity and entity.type == "inserter" and string.match(entity.name, "arrow") then
-		check_positions(entity)
+	if entity and entity.type == "inserter" and string.match(entity.name, "%-arrow$") then
+		this.check_positions(entity)
 	end
 end)
 
 script.on_event(defines.events.on_gui_closed, function(evt)
 	local entity = evt.entity
-	if entity and entity.type == "inserter" and string.match(entity.name, "arrow") then
-		check_positions(entity)
-	end
-end)
-
-script.on_event(defines.events.on_player_rotated_entity, function(evt)
-	local entity = evt.entity
-	if string.find(entity.name, "arrow") then
-		if not game.active_mods["bobinserters"] then
-			entity.surface.find_entity(entity.name .. "_arr", entity.position).direction = (entity.direction + 4) % 8
-			return
-		end
-		entity.direction = (entity.direction + 4) % 8
-
-		local is_long = entity.name:find("long")
-		local is_stack = entity.name:find("stack")
-		if not is_long and not is_stack then
-			norm_next(entity)
-			return
-		end
-		if is_long and not is_stack then
-			long_next(entity)
-			return
-		end
-		if not is_long and is_stack then
-			stack_next(entity)
-			return
-		end
-		if is_long and is_stack then
-			long_stack_next(entity)
-			return
-		end
-
+	if entity and entity.type == "inserter" and string.match(entity.name, "%-arrow$") then
+		this.check_positions(entity)
 	end
 end)
 
 script.on_load(function()
-	picker_dollies_compat()
+	this.picker_dollies_compat()
 end)
 
 script.on_init(function()
-	picker_dollies_compat()
+	this.picker_dollies_compat()
 end)
-
 
 -- game.players[1].print(serpent.block {})
 -- game.players[1].print("hoi")
